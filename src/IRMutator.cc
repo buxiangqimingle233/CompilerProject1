@@ -113,6 +113,12 @@ Expr IRMutator::visit(Ref<const Ramp> op) {
 }
 
 
+Expr IRMutator::visit(Ref<const Dec> op) {
+    Expr new_content = mutate(op->content);
+    return Dec::make(op->type(), new_content, op->is_ref);
+}
+
+
 Expr IRMutator::visit(Ref<const Var> op) {
     std::vector<Expr> new_args;
     for (auto arg : op->args) {
