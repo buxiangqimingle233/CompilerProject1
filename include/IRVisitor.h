@@ -49,6 +49,7 @@ class IRVisitor {
     virtual void visit(Ref<const Index>);
     virtual void visit(Ref<const Dom>);
     virtual void visit(Ref<const Dec>);
+    virtual void visit(Ref<const Epsilon>);
     virtual void visit(Ref<const LoopNest>);
     virtual void visit(Ref<const IfThenElse>);
     virtual void visit(Ref<const Move>);

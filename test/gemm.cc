@@ -40,6 +40,12 @@ int main() {
     Expr expr_C = Var::make(data_type, "C", {i, j}, {M, N});
     Expr dec_C = Dec::make(data_type, expr_C, true);
 
+    // test for declaration
+    Expr expr_D = Var::make(data_type, "D", {}, {});
+    Expr dec_D = Dec::make(data_type, expr_D, false);
+    Expr epsilon = Epsilon::make(data_type);
+    Stmt dec_stmt = Move::make(expr_D, epsilon, MoveType::MemToMem);
+
     // main stmt
     Stmt main_stmt = Move::make(
         expr_C,
@@ -52,7 +58,7 @@ int main() {
     Stmt loop_nest = LoopNest::make({i, j, k}, {main_stmt});
 
     // kernel
-    Group kernel = Kernel::make("simple_gemm", {dec_A, dec_B}, {dec_C}, {loop_nest}, KernelType::CPU);
+    Group kernel = Kernel::make("simple_gemm", {dec_A, dec_B}, {dec_C}, {dec_stmt, loop_nest}, KernelType::CPU);
 
     // visitor
     IRVisitor visitor;

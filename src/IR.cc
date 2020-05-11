@@ -90,6 +90,11 @@ Expr Dec::mutate_expr(IRMutator *mutator) const {
 }
 
 
+Expr Epsilon::mutate_expr(IRMutator *mutator) const {
+    return mutator->visit(Ref<const Epsilon>(shared_from_this()));
+}
+
+
 Expr Var::mutate_expr(IRMutator *mutator) const {
     return mutator->visit(Ref<const Var>(shared_from_this()));
 }
@@ -185,6 +190,11 @@ void Ramp::visit_node(IRVisitor *visitor) const {
 
 void Dec::visit_node(IRVisitor *visitor) const {
     return visitor->visit(Ref<const Dec>(shared_from_this()));
+}
+
+
+void Epsilon::visit_node(IRVisitor *visitor) const {
+    return visitor->visit(Ref<const Epsilon>(shared_from_this()));
 }
 
 

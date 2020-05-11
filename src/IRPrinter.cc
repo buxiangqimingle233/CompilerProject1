@@ -184,7 +184,7 @@ void IRPrinter::visit(Ref<const Var> op) {
         oss << op->name;
     }
 
-    if (print_arg) {
+    if (print_arg && op->shape.size() > 0) {
         oss << "[";
         for (size_t i = 0; i < op->shape.size(); ++i) {
             oss << op->shape[i];
@@ -193,7 +193,7 @@ void IRPrinter::visit(Ref<const Var> op) {
             }
         }
         oss << "]";
-    } else {
+    } else if (op->args.size() > 0){
         oss << "[";
         for (size_t i = 0; i < op->args.size(); ++i) {
             op->args[i].visit_expr(this);
@@ -233,7 +233,6 @@ void IRPrinter::visit(Ref<const Index> op) {    // TODO: we just support ascendi
             case InWhichStmt::LN0: {
                 oss << "int " << op->name << " = ";
                 (op->dom).visit_expr(this);
-                // FIXME: Rethink to print ";"
                 oss << "; ";
                 break;
             }
@@ -269,6 +268,11 @@ void IRPrinter::visit(Ref<const Index> op) {    // TODO: we just support ascendi
         // }
         // oss << "*/ ";
     }
+}
+
+
+void IRPrinter::visit(Ref<const Epsilon> op) {
+    return;
 }
 
 
@@ -321,9 +325,10 @@ void IRPrinter::visit(Ref<const IfThenElse> op) {
 void IRPrinter::visit(Ref<const Move> op) {
     print_indent();
     (op->dst).visit_expr(this);
-    // TODO: add a nulltype
-    oss << " = ";
-    (op->src).visit_expr(this);
+    if (op->src->node_type() != IRNodeType::Epsilon) {
+        oss << " = ";
+        (op->src).visit_expr(this);
+    }
     oss << ";";
 
     // comment
@@ -354,8 +359,7 @@ void IRPrinter::visit(Ref<const Move> op) {
     oss << "\n";
 }
 
-// TODO: do not print KernelType, meanwhile, add the head field
-// change the interface.
+
 void IRPrinter::visit(Ref<const Kernel> op) {
     /* print the included head files */
     oss << "#include \"../run.h\"\n";
