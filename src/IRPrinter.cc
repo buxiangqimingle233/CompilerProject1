@@ -166,14 +166,18 @@ void IRPrinter::visit(Ref<const Ramp> op) {
 
 
 void IRPrinter::visit(Ref<const Dec> op) {
-    oss << op->type() << " ";
+    bool store_print_arg = print_arg;
     bool store_gen_ref = gen_ref;
+
+    oss << op->type() << " ";
     if (op->is_ref) {
         gen_ref = true;
     }
+    print_arg = true;
     // FIXME: there may be errors when doing recursive generation
     (op->content).visit_expr(this);
     gen_ref = store_gen_ref;
+    print_arg = store_print_arg;
 }
 
 

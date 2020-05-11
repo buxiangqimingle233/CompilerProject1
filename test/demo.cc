@@ -70,6 +70,8 @@ int main() {
 
     Expr expr_interfaceB = Var::make(data_type, "interfaceB", {i, j}, {M, N});
     Expr dec_interfaceB = Dec::make(data_type, expr_interfaceB, true);
+
+    
     // kernel
     Group kernel = Kernel::make("mytest", {dec_interfaceA}, {dec_interfaceB}, {loop_nest}, KernelType::CPU);
 
