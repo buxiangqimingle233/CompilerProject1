@@ -101,6 +101,10 @@ void IRVisitor::visit(Ref<const Dec> op) {
     return;
 }
 
+void IRVisitor::visit(Ref<const Epsilon> op) {
+    return;
+}
+
 void IRVisitor::visit(Ref<const Var> op) {
     for (auto arg : op->args) {
         arg.visit_expr(this);

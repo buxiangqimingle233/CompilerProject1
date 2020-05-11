@@ -128,7 +128,9 @@ enum class IRNodeType : short {
     FloatImm,
     StringImm,
     Dom,
-    Dec
+    Dec,
+    // Empty Node
+    Epsilon
 };      
 
 // TODO: [wz]
@@ -818,6 +820,25 @@ class Index : public ExprNode, public std::enable_shared_from_this<Index> {
     static const IRNodeType node_type_ = IRNodeType::Index;
 };
 
+
+/**
+ * epsilon
+ * - indicates a null node
+ */
+
+class Epsilon : public ExprNode, public std::enable_shared_from_this<Epsilon> {
+ public:
+    Epsilon(Type _type) : ExprNode(_type, IRNodeType::Epsilon) {}
+
+    Expr mutate_expr(IRMutator *mutator) const;
+    void visit_node(IRVisitor *visitor) const;
+
+    static Expr make(Type t) {
+        return std::make_shared<const Epsilon>(t);
+    }
+    
+    static const IRNodeType node_type_ = IRNodeType::Epsilon;
+};
 
 /**
  * loop nest

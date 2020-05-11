@@ -119,6 +119,11 @@ Expr IRMutator::visit(Ref<const Dec> op) {
 }
 
 
+Expr IRMutator::visit(Ref<const Epsilon> op) {
+    return Epsilon::make(op->type());
+}
+
+
 Expr IRMutator::visit(Ref<const Var> op) {
     std::vector<Expr> new_args;
     for (auto arg : op->args) {
