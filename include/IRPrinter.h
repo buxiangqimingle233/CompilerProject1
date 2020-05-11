@@ -41,6 +41,7 @@ class IRPrinter : public IRVisitor {
         indent = 0;
         print_range = false;
         print_arg = false;
+        gen_ref = false;
     }
     std::string print(const Expr&);
     std::string print(const Stmt&);
@@ -73,6 +74,8 @@ class IRPrinter : public IRVisitor {
     void visit(Ref<const Ramp>) override;
     void visit(Ref<const Index>) override;
     void visit(Ref<const Dom>) override;
+    void visit(Ref<const Dec>) override;
+    void visit(Ref<const Epsilon>) override;
     void visit(Ref<const LoopNest>) override;
     void visit(Ref<const IfThenElse>) override;
     void visit(Ref<const Move>) override;
@@ -82,6 +85,13 @@ class IRPrinter : public IRVisitor {
     int indent;
     bool print_range;
     bool print_arg;
+    
+    // for generating "for" statement
+    InWhichStmt in_which_stmt = InWhichStmt::Default;
+    const InWhichStmt int2IWS[4] = { InWhichStmt::LN0, InWhichStmt::LN1, 
+        InWhichStmt::LN2, InWhichStmt::Default };
+    // for generating function signature
+    bool gen_ref;       // Var
 };
 
 }  // namespace Internal

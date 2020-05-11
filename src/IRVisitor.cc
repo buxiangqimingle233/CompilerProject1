@@ -96,6 +96,14 @@ void IRVisitor::visit(Ref<const Ramp> op) {
     return;
 }
 
+void IRVisitor::visit(Ref<const Dec> op) {
+    (op->content).visit_expr(this);
+    return;
+}
+
+void IRVisitor::visit(Ref<const Epsilon> op) {
+    return;
+}
 
 void IRVisitor::visit(Ref<const Var> op) {
     for (auto arg : op->args) {
