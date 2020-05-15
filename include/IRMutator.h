@@ -52,6 +52,8 @@ class IRMutator {
     virtual Expr visit(Ref<const Ramp>);
     virtual Expr visit(Ref<const Index>);
     virtual Expr visit(Ref<const Dom>);
+    virtual Expr visit(Ref<const Dec>);
+    virtual Expr visit(Ref<const Epsilon>);
     virtual Stmt visit(Ref<const LoopNest>);
     virtual Stmt visit(Ref<const IfThenElse>);
     virtual Stmt visit(Ref<const Move>);

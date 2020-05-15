@@ -127,9 +127,30 @@ enum class IRNodeType : short {
     UIntImm,
     FloatImm,
     StringImm,
-    Dom
+    Dom,
+    Dec,
+    // Empty Node
+    Epsilon
+};      
+
+// TODO: [wz]
+// We need a new NodeType "Declaration" (wrapping a Var), 
+// but we do not change LoopNest Node to add a Dec Node although we should do so
+
+/**
+ * recording which statement we are at now, the global variable in_which_stmt
+ * should be set once the IRPrinter enters a StmtNode
+ */ 
+enum class InWhichStmt : short {
+    // LoopNest
+    LN0,        // int i = xxx;
+    LN1,        // i < xxx;
+    LN2,        // i++;
+    // Other Statements
+    Default
 };
 
+// TODO: about ";"
 
 /**
  * forward declaration
@@ -701,10 +722,23 @@ class Ramp : public ExprNode, public std::enable_shared_from_this<Ramp> {
     static const IRNodeType node_type_ = IRNodeType::Ramp;
 };
 
+class Dec : public ExprNode, public std::enable_shared_from_this<Dec> {
+ public:
+    Expr content;
+    bool is_ref;
 
-/**
- * TODO: do we need shuffle?
- */ 
+    Dec(Type _type, Expr _content, bool _is_ref) : ExprNode(_type, IRNodeType::Dec),
+        content(_content), is_ref(_is_ref) {}    // _is_ref: indicate whether this node is a reference
+
+    Expr mutate_expr(IRMutator *mutator) const;
+    void visit_node(IRVisitor *visitor) const;
+
+    static Expr make(Type t, Expr _content, bool _is_ref) {
+        return std::make_shared<const Dec>(t, _content, _is_ref);
+    }
+
+    static const IRNodeType node_type_ = IRNodeType::Dec;
+};
 
 
 /**
@@ -715,7 +749,6 @@ class Var : public ExprNode, public std::enable_shared_from_this<Var> {
  public:
     std::string name;
     std::vector<Expr> args;
-    // TODO: this may need to be removed to other class
     std::vector<size_t> shape;
 
     Var(Type _type, const std::string &_name, const std::vector<Expr> &_args,
@@ -787,6 +820,25 @@ class Index : public ExprNode, public std::enable_shared_from_this<Index> {
     static const IRNodeType node_type_ = IRNodeType::Index;
 };
 
+
+/**
+ * epsilon
+ * - indicates a null node
+ */
+
+class Epsilon : public ExprNode, public std::enable_shared_from_this<Epsilon> {
+ public:
+    Epsilon(Type _type) : ExprNode(_type, IRNodeType::Epsilon) {}
+
+    Expr mutate_expr(IRMutator *mutator) const;
+    void visit_node(IRVisitor *visitor) const;
+
+    static Expr make(Type t) {
+        return std::make_shared<const Epsilon>(t);
+    }
+    
+    static const IRNodeType node_type_ = IRNodeType::Epsilon;
+};
 
 /**
  * loop nest
