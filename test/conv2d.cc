@@ -63,12 +63,15 @@ int main() {
         {n, c, Binary::make(index_type, BinaryOpType::Add, p, r),
                Binary::make(index_type, BinaryOpType::Add, q, s)},
         {N, C, H, W});
+    Expr dec_I = Dec::make(data_type, expr_I, true);
 
     // W
     Expr expr_W = Var::make(data_type, "W", {k, c, r, s}, {K, C, R, S});
+    Expr dec_W = Dec::make(data_type, expr_W, true);
 
     // O
     Expr expr_O = Var::make(data_type, "O", {n, k, p, q}, {N, K, P, Q});
+    Expr dec_O = Dec::make(data_type, expr_O, true);
 
     // main stmt
     Stmt main_stmt = Move::make(
@@ -82,7 +85,7 @@ int main() {
     Stmt loop_nest = LoopNest::make({n, k, p, q, c, r, s}, {main_stmt});
 
     // kernel
-    Group kernel = Kernel::make("simple_conv2d", {expr_I, expr_W}, {expr_O}, {loop_nest}, KernelType::CPU);
+    Group kernel = Kernel::make("simple_conv2d", {dec_I, dec_W}, {dec_O}, {loop_nest}, KernelType::CPU);
 
     // visitor
     IRVisitor visitor;
