@@ -1,7 +1,9 @@
 %{
+	#include "y.tab.h"
 	#include <string.h>
 	#include <stdio.h>
 	#include <stdlib.h>
+	extern FILE * yyin;
 %}
 
 %union {char* s;}
@@ -47,7 +49,8 @@ IdExpr	: ID				{printf("IdExpr->ID\t%s\n",$1);}
 Const	: FLOAT				{printf("Const->FLOAT\t%s\n",$1);}
 		| INT				{printf("Const->INT\t%s\n",$1);}
 %%
-int main(){
+int yy_main(){
+	yyin = fopen("./temp/case_string", "r+");
 	yyparse();
 	return 0;
 }
