@@ -10,6 +10,8 @@
 #include "IRPrinter.h"
 #include "type.h"
 
+#include "y.tab.h"
+
 using namespace Boost::Internal;
 
 void translate(std::string ipath, std::string opath) {
@@ -35,19 +37,25 @@ void translate(std::string ipath, std::string opath) {
 
 	ifile.close();
 
+	std::ofstream tfile("./temp/case_string", std::ios::out);
+	tfile << kernel;
+	tfile.close();
+	yy_main();
 
-	std::string code = "";
+
 	/////
+
 
 	/////
 
 	std::ofstream ofile(opath, std::ios::out);
-	ofile << code;
+	ofile << "#include \"../run.h\"\n\n";
 	ofile.close();
 	
 }
 
 int main() {
+
 	for (int i = 1; i <= 10; i++) {
 		std::string ipath = "./cases/case" + std::to_string(i) + ".json";
 		std::string opath = "./kernels/kernel_case" + std::to_string(i) + ".cc";
@@ -55,3 +63,4 @@ int main() {
 	}
 	return 0;
 }
+
