@@ -2,3 +2,4 @@
 2.执行命令lex myscanner.l 和 yacc -d myscanner.y。将所得的lex.yy.c重命名为lex.yy.cc；y.tab.c重命名为y.tab.cc，都移到solution文件夹下。
 3.将y.tab.h移动到include下，并添加声明 int yylex(void); int yyerror(char *msg); int yy_main(void);
 4.在project1下创建文件夹temp存放中间文件
+5.目前可以编译运行，不能测试。
